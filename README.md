@@ -2,14 +2,17 @@
 ## 프로젝트 주제
 이미지 학습을 통해 컨베이어 벨트위의 물건을 자동으로 분류하는 모형 및 시스템 제작
 
+---
 ## 프로젝트 수행 기간
 2023.03 - 2023.06 (4학년 1학기 홍익챌린지 프로젝트)
 
+---
 ## 프로젝트 참여 인원
 2명
 
+---
 ## 프로젝트 수행 과정
-1) 라즈베리파이와 센서 학습 및 실습 후 모형 제작
+#### 1) 라즈베리파이와 센서 학습 및 실습 후 모형 제작
    
    ![image](https://github.com/Kim-yerin0904/hongik_challenge/assets/77713307/1cb021d3-162e-4d04-9d08-ea3d3c9cad35)
    + 완성된 모형 사진
@@ -24,7 +27,7 @@
   - 모터 드라이버 : DC 모터의 속도, 방향 조정 역할
   - 터미널 변환기 : 모터 드라이버에 안정된 전원 공급 역할
     
-2) 이미지 분류 모델 제작
+#### 2) 이미지 분류 모델 제작
   - kaggle에서 패스트 푸드 데이터 셋 다운 받아 사용.
   - roboflow에서 핫도그, 도넛, 피자 데이터를 각각 120장씩 라벨링
   - train data : test data = 8 : 2
@@ -33,13 +36,13 @@
     ![image](https://github.com/Kim-yerin0904/hongik_challenge/assets/77713307/9cc90501-45ec-4f5a-b0c7-85caad902f0f)
     + 모델 정확도 confusion matrix
   
-3) 서버, DB 구축 및 연동 웹페이지 제작
+#### 3) 서버, DB 구축 및 연동 웹페이지 제작
   - 네이버 클라우드 플랫폼에서 서버 대여, 공인 ip 주소 할당 및 연결
   - Django를 이용하여 웹페이지 제작, DB는 MySQL
   - 재고 파악 기능을 위한 stock app 생성
   - MySQL work bench 사용, stock 테이블 생성 product_name과 product_count로 구성
     
-4) MQTT 통신
+#### 4) MQTT 통신
   - MQTT 통신을 위해 브로커는 mosquitto 사용
   - 센서의 정보를 서버에서 알 수 있도록 각 토픽을 만들어 구독하도록 함
     + camera 토픽 : 라즈베리파이 카메라가 물건의 사진을 찍을 때
@@ -47,18 +50,25 @@
     + dcmotor : dc모터 제어. 컨베이어벨트 멈추거나 다시 돌릴 때
     + infra : 적외선 센서에 물건이 감지 될 때
     + servo : 서보 모터 제어
+  - MQTT 통신 연결을 위한 start.py 제작 : 브로커가 있는 ip주소와 포트 번호를 적어 브로커와 연결, 연결에 성공하면 on_connect에서 토픽을 구독하고, on_message에서 구독한 토픽에서 메시지가 오면 디코딩한 후 원하는 동작을 실행하도록 함.
       
-5) 실시간 스트리밍 기능
+#### 5) 실시간 스트리밍 기능
   - 라즈베리파이의 motion 사용하여 구현
   - 라즈베리파이의 8081번 포트에서 확인 할 수 있음
 ![image](https://github.com/Kim-yerin0904/hongik_challenge/assets/77713307/8d439599-b82a-4057-982c-45f1f73dc15d)
 + 라즈베리파이 8081번 포트
   - ncloud 서버에서 만든 웹사이트 html의 img 태그에 라즈베라파이 8081번 포트 연결
+![image](https://github.com/Kim-yerin0904/hongik_challenge/assets/77713307/5aa5068e-b4e7-4def-97ba-9da4e3795a6d)
++ 실시간 스트리밍 페이지
+![image](https://github.com/Kim-yerin0904/hongik_challenge/assets/77713307/694546e5-1ed2-4a0d-9665-8c65a7a79fce)
++ html 코드 (까먹고 코드 저장을 안하고 서버 반납해서 코드가 없음..)
 
-6) 센서 제어를 위한 python 코드
-  - 
-
+#### 6) 센서 제어를 위한 python 코드
+  - 모든 센서들의 기능을 class 형태로 정의 
+   
+---
 ## 프로젝트 수행 중 발생된 문제와 해결 방안
-1) 
+
+---
 ## 프로젝트 결과
 
