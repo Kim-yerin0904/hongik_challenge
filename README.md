@@ -33,6 +33,7 @@
   - train data : test data = 8 : 2
   - 높은 정확도를 위해 train 데이터 증식
   - yolov5s 모델 이용 : img_size=426, batch=8, epoch=50
+    
     ![image](https://github.com/Kim-yerin0904/hongik_challenge/assets/77713307/9cc90501-45ec-4f5a-b0c7-85caad902f0f)
     + 모델 정확도 confusion matrix
   
@@ -55,20 +56,41 @@
 #### 5) 실시간 스트리밍 기능
   - 라즈베리파이의 motion 사용하여 구현
   - 라즈베리파이의 8081번 포트에서 확인 할 수 있음
+    
 ![image](https://github.com/Kim-yerin0904/hongik_challenge/assets/77713307/8d439599-b82a-4057-982c-45f1f73dc15d)
 + 라즈베리파이 8081번 포트
+  
   - ncloud 서버에서 만든 웹사이트 html의 img 태그에 라즈베라파이 8081번 포트 연결
+    
 ![image](https://github.com/Kim-yerin0904/hongik_challenge/assets/77713307/5aa5068e-b4e7-4def-97ba-9da4e3795a6d)
 + 실시간 스트리밍 페이지
+  
 ![image](https://github.com/Kim-yerin0904/hongik_challenge/assets/77713307/694546e5-1ed2-4a0d-9665-8c65a7a79fce)
 + html 코드 (까먹고 코드 저장을 안하고 서버 반납해서 코드가 없음..)
 
 #### 6) 센서 제어를 위한 python 코드
   - 모든 센서들의 기능을 class 형태로 정의 
-   
+   + aicamera.py : 라즈베리파이 카메라 제어
+   + dcmotor.py : dc모터 제어
+   + infraredray_sensor.py : 적외선 센서 제어
+   + led_control.py : LED 제어
+   + servo_motor.py : 서보 모터 제어
+   + start.py : 모든 센서 python 파일 import, mqtt 연결, 각 메세지마다의 다음 과정을 지정, DB연결 (이 파일만 돌리면 됨)
+     
 ---
 ## 프로젝트 수행 중 발생된 문제와 해결 방안
+1) 웹과 브로커 연결 오류
+   - 문제 : 초기에는 웹 페이지에서 실시간 스트리밍을 구현하기 위해 MQTT 통신을 이용하여 라즈베리파이에 연결된 카메라가 찍는 사진을 가져와 영상으로 구현하려 함.그러나 외부 서버에서 브로커로 연결이 계속 실패.
+   - 원인 : 외부 접속을 허용해도 실패했었는데 찾아보니 웹과 브로커의 통신은 웹 소켓 통신을 이용하기 때문에 연결이 되지 않았던 것.
+   - 해결 방안 : 브로커로 사용하는 mosquitto에는 웹 소켓도 사용할 수 있었기 때문에 mosquitto.conf 파일에 웹 소켓 프로토콜과 포트 번호를 연결하였더니 브로커와의 연결에 성공.
+     
+2) MQTT를 이용한 실시간 스트리밍 기능
+   - 문제 : MQTT통신을 이용하여 전송된 payloaDBytes는 unit8array 형식으로 받아지기 때문에 btoa 메소드를 이용하여 base64로 인코딩해야 함. 하지만 스트리밍이 될 때도 있고 안될 때도 있었음. 그리고 되더라도 지연이 굉장히 심함. 
+   - 원인 : 오류를 콘솔 창에 출력해보니 call stack이 초과하였다는 에러가 출력. 원인을 예상했을 때 라즈베리파이 캠에서 촬영된 사진이 빠른 속도로 넘어와 on_message 함수를 호출하는데 이미지로 변환하기 위한 인코딩이 너무 오래 걸려 call stack에 호출된 함수가 감당할 수 없을 만큼 쌓인다고 판단.
+   - 해결방안 : 로컬 내에서는 좀 더 빠르게 스트리밍할 수 있다는 점을 깨달아 라즈베리파이 내부에서 스트리밍하기로 함. motion이라는 라이브러리를 사용, 라즈베리파이 안의 8081 포트를 스트리밍하는 페이지로 사용하기 위해 포트 포워딩을 이용. 하지만 이 플젝은 따로 구축한 서버의 웹사이트에서 구현되어야 하므로 메인 페이지의 html 파일의 실시간 스트리밍을 하는 이미지 태그의 SRC를 라즈베리파이의 8081번으로 지정하여 기능을 구현. 하지만 여기서 한 번 더 오류가 발생했는데 Chrome CORS 에러가 발생. 공인 IP가 아닌 IP 주소에서 데이터를 가져와 발생하는 문제라고 하는데, Block insecure private network request 항목의 설정값을 disabled로 설정하였더니 해결 함
 
+3) 모형의 자동 반복
+   
 ---
 ## 프로젝트 결과
 
